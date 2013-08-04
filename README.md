@@ -1,4 +1,4 @@
-goutils
+gopkg
 =======
 
-goutils is a collection of useful stuff for Go programming, and especially for solving Project Euler problems.
+This project provides packages for various utility functions for programming in Go.
