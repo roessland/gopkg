@@ -58,6 +58,13 @@ func TestSlice_thousand(t *testing.T) {
 	}
 }
 
+func TestCount(t *testing.T) {
+    isPrime := Map(1000000)
+    if Count(isPrime, 10) != 4 {
+        t.Errorf("Wrong number of primes below 10")
+    }
+}
+
 func BenchmarkMap(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_ = Map(10000)
@@ -65,7 +72,7 @@ func BenchmarkMap(b *testing.B) {
 }
 
 func BenchmarkSlice(b *testing.B) {
-    primesMap := Map(10000000)
+    primesMap := Map(10000)
     b.ResetTimer()
     for i := 0; i < b.N; i++ {
         _ = Slice(primesMap)

@@ -39,6 +39,20 @@ func Map(N int) []bool {
 
 }
 
+func Count(isPrime []bool, n int) int {
+    count := 0
+    for x, val := range isPrime {
+        if x > n {
+            break
+        }
+
+        if val {
+            count++
+        }
+    }
+    return count
+}
+
 // PrimesUpToSlice takes an isPrime boolean map, and returns a slice of the
 // primes.
 func Slice(isPrime []bool) []int {
