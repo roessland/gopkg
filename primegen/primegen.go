@@ -4,10 +4,13 @@ import (
 	"math"
 )
 
+// Primes below 1000-ish
+var Smallprimes []int64
+
 // PrimeMap returns an isPrime boolean map containing the numbers up to and
 // including N. PrimeMap uses the sieve of Eratosthenes and has a running time
 // of O(N).
-func Map(N int) []bool {
+func Map(N int64) []bool {
 	if N < 0 {
 		return []bool{}
 	}
@@ -18,7 +21,7 @@ func Map(N int) []bool {
 		A[i] = true
 	}
 
-	// The first two values aren't handles by the sieve, so we manually
+	// The first two values aren't handled by the sieve, so we manually
 	// specify that they aren't prime.
 	if N >= 0 {
 		A[0] = false
@@ -28,7 +31,7 @@ func Map(N int) []bool {
 	}
 
 	// Sieve
-	for i := 2; i <= int(math.Sqrt(float64(N))); i++ {
+	for i := int64(2); i <= int64(math.Sqrt(float64(N))); i++ {
 		if A[i] {
 			for j := i * i; j <= N; j += i {
 				A[j] = false
@@ -39,14 +42,18 @@ func Map(N int) []bool {
 
 }
 
-func Count(isPrime []bool, n int) int {
-    count := 0
-    for x, val := range isPrime {
-        if x > n {
+// The number of prime numbers less than or equal to n
+func Pi(isPrime []bool, n int64) int64 {
+    if n >= int64(len(isPrime)) {
+        panic("isPrime boolean map was too small to decide")
+    }
+    count := int64(0)
+    for num, numIsPrime := range isPrime {
+        if int64(num) > n {
             break
         }
 
-        if val {
+        if numIsPrime {
             count++
         }
     }
@@ -55,22 +62,16 @@ func Count(isPrime []bool, n int) int {
 
 // PrimesUpToSlice takes an isPrime boolean map, and returns a slice of the
 // primes.
-func Slice(isPrime []bool) []int {
-	primes := make([]int, 0)
+func SliceFromMap(isPrime []bool) []int64 {
+	primes := make([]int64, 0)
 	for num, numIsPrime := range isPrime {
 		if numIsPrime {
-			primes = append(primes, num)
+			primes = append(primes, int64(num))
 		}
 	}
 	return primes
 }
 
-// PrimesChan takes an isPrime boolean map, and sends the primes to a
-// channel.
-func Chan(isPrime []bool, primes chan<- int) {
-	for num, numIsPrime := range isPrime {
-		if numIsPrime {
-			primes <- num
-		}
-	}
+func init() {
+    Smallprimes = SliceFromMap(Map(1000))
 }

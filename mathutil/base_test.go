@@ -22,3 +22,13 @@ func TestFromDigits(t *testing.T) {
         FromDigits([]int64{1, 1, 1, 2, 3}, 3)
     }, "digit not possible should panic")
 }
+
+func TestIsPandigital(t *testing.T) {
+    assert.Equal(t, true, IsPandigital(123456789, 9), "they should be equal")
+    assert.Equal(t, true, IsPandigital(12345678, 8), "they should be equal")
+    assert.Equal(t, true, IsPandigital(1, 1), "they should be equal")
+    assert.Equal(t, false, IsPandigital(12345678, 9), "they should be equal")
+    assert.Equal(t, false, IsPandigital(123458789, 9), "they should be equal")
+    assert.Equal(t, false, IsPandigital(123458789, 7), "they should be equal")
+    assert.Equal(t, false, IsPandigital(510152025, 9), "they should be equal")
+}

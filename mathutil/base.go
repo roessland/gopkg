@@ -1,5 +1,13 @@
 package mathutil
 
+func MaxInt64(a, b int64) int64 {
+    if a > b {
+        return a
+    } else {
+        return b
+    }
+}
+
 func ToDigits(n, base int64) []int64 {
     if n < 0 {
         panic("negative number was provided")
@@ -26,4 +34,24 @@ func FromDigits(digits []int64, base int64) int64 {
         n += digits[i] * b
     }
     return n
+}
+
+func IsPandigital(n int64, length int64) bool {
+    digits := ToDigits(n, 10)
+    if int64(len(digits)) != length {
+        return false
+    }
+    counts := make([]int32, length)
+    for _, digit := range digits {
+        if digit == 0 || digit > length {
+            return false
+        }
+        counts[digit-1]++
+    }
+    for i := int64(0); i < length; i++ {
+        if counts[i] != 1 {
+            return false
+        }
+    }
+    return true
 }

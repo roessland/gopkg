@@ -32,15 +32,15 @@ func TestMap_low_nums(t *testing.T) {
 }
 
 func TestSlice_low_nums(t *testing.T) {
-	for _, N := range []int{-1, 0, 1} {
-		if p := Slice(Map(N)); !sliceutil.IntsEqual(p, []int{}) {
-			t.Errorf("Slice(Map(%v)) = %v, want %v", N, p, []int{})
+	for _, N := range []int64{-1, 0, 1} {
+		if p := SliceFromMap(Map(N)); !sliceutil.EqualInt64(p, []int64{}) {
+			t.Errorf("Slice(Map(%v)) = %v, want %v", N, p, []int64{})
 		}
 	}
 }
 
 func TestSlice_thousand(t *testing.T) {
-	theprimes := []int{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47,
+	theprimes := []int64{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47,
 		53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131,
 		137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211,
 		223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293,
@@ -52,15 +52,15 @@ func TestSlice_thousand(t *testing.T) {
 		787, 797, 809, 811, 821, 823, 827, 829, 839, 853, 857, 859, 863, 877, 881,
 		883, 887, 907, 911, 919, 929, 937, 941, 947, 953, 967, 971, 977, 983, 991,
 		997}
-	ourprimes := Slice(Map(1000))
-	if !sliceutil.IntsEqual(theprimes, ourprimes) {
+	ourprimes := SliceFromMap(Map(1000))
+	if !sliceutil.EqualInt64(theprimes, ourprimes) {
 		t.Errorf("Slice(Map(1000)) = %v, want %v", ourprimes, theprimes)
 	}
 }
 
 func TestCount(t *testing.T) {
-    isPrime := Map(1000000)
-    if Count(isPrime, 10) != 4 {
+    isPrime := Map(100000)
+    if Pi(isPrime, 10) != 4 {
         t.Errorf("Wrong number of primes below 10")
     }
 }
@@ -75,6 +75,6 @@ func BenchmarkSlice(b *testing.B) {
     primesMap := Map(10000)
     b.ResetTimer()
     for i := 0; i < b.N; i++ {
-        _ = Slice(primesMap)
+        _ = SliceFromMap(primesMap)
     }
 }
