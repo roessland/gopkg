@@ -3,11 +3,6 @@ package mathutil
 import "testing"
 import "github.com/stretchr/testify/assert"
 
-func TestMaxInt64(t *testing.T) {
-	assert.Equal(t, int64(0), MaxInt64(0, -100), "they should be equal")
-	assert.Equal(t, int64(0), MaxInt64(0, 0), "they should be equal")
-}
-
 func TestToDigits(t *testing.T) {
 	assert.Equal(t, []int64{1, 2, 3}, ToDigits(123, 10), "they should be equal")
 	assert.Equal(t, []int64{1, 1, 1, 2, 0}, ToDigits(123, 3), "they should be equal")

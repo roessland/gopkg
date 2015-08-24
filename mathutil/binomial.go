@@ -63,7 +63,7 @@ func ChooseModPrime(n, k, p int64) int64 {
 
 	prod := int64(1)
 	for i := len(ki) - 1; i >= 0; i-- {
-		prod = (prod * Choose(ni[i], ki[i])) % p
+		prod = (prod * ChooseMod(ni[i], ki[i], p)) % p
 	}
 	return prod
 }
