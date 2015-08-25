@@ -37,5 +37,28 @@ func TestCartesianPower(t *testing.T) {
 
 	// Panics
 	assert.Panics(t, func() { CartesianPower(0, 1) }, "too small n")
-	assert.Panics(t, func() { CartesianPower(5, 0) }, "too small power")
+	assert.Panics(t, func() { CartesianPower(5, -1) }, "too small power")
+}
+
+func TestSubsets(t *testing.T) {
+	var subsets <-chan []int64
+
+	subsets = Subsets(3, 3)
+	assert.Equal(t, []int64{0, 1, 2}, <-subsets, "")
+	assert.Nil(t, <-subsets, "")
+
+	subsets = Subsets(3, 2)
+	assert.Equal(t, []int64{0, 1}, <-subsets, "")
+	assert.Equal(t, []int64{0, 2}, <-subsets, "")
+	assert.Equal(t, []int64{1, 2}, <-subsets, "")
+	assert.Nil(t, <-subsets, "")
+
+	subsets = Subsets(3, 1)
+	assert.Equal(t, []int64{0}, <-subsets, "")
+	assert.Equal(t, []int64{1}, <-subsets, "")
+	assert.Equal(t, []int64{2}, <-subsets, "")
+	assert.Nil(t, <-subsets, "")
+
+	subsets = Subsets(3, 0)
+	assert.Nil(t, <-subsets, "")
 }

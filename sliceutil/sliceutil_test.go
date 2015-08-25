@@ -1,6 +1,7 @@
 package sliceutil
 
 import "testing"
+import "github.com/stretchr/testify/assert"
 
 func TestEqualInt_different_length(t *testing.T) {
 	a := []int{1, 2, 3}
@@ -24,4 +25,11 @@ func TestEqualInt_same(t *testing.T) {
 	if !EqualInt(a, b) {
 		t.Errorf("IntsEqual(%v, %v) == false, want true")
 	}
+}
+
+func TestStrictlyIncreasingInt64(t *testing.T) {
+	assert.Equal(t, true, StrictlyIncreasingInt64([]int64{1, 2, 3, 4, 5}), "")
+	assert.Equal(t, false, StrictlyIncreasingInt64([]int64{1, 2, 3, 4, 4}), "")
+	assert.Equal(t, true, StrictlyIncreasingInt64([]int64{1}), "sequence length one")
+	assert.Equal(t, true, StrictlyIncreasingInt64([]int64{}), "empty sequence")
 }
