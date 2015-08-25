@@ -33,3 +33,7 @@ func TestStrictlyIncreasingInt64(t *testing.T) {
 	assert.Equal(t, true, StrictlyIncreasingInt64([]int64{1}), "sequence length one")
 	assert.Equal(t, true, StrictlyIncreasingInt64([]int64{}), "empty sequence")
 }
+
+func TestProductInt64(t *testing.T) {
+	assert.Equal(t, int64(38500), ProductInt64([]int64{5, 14, 55, 10}), "")
+}

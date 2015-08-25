@@ -14,6 +14,11 @@ func TestGCD(t *testing.T) {
 	assert.Equal(t, int64(20), GCD(-20, -100), "both are negative")
 }
 
+func TestLCM(t *testing.T) {
+	assert.Equal(t, int64(630), LCM(35, 90), "")
+	assert.Equal(t, int64(0), LCM(1, 0), "")
+}
+
 func TestEGCD(test *testing.T) {
 	var r, s, t, r_, s_, t_, a, b int64
 

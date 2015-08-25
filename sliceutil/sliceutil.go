@@ -46,6 +46,7 @@ func EqualInt64(a, b []int64) bool {
 	return true
 }
 
+// StrictlyIncreasing checks if a slice has strictly increasing values
 func StrictlyIncreasingInt64(seq []int64) bool {
 	for i := 1; i < len(seq); i++ {
 		if seq[i-1] >= seq[i] {
@@ -53,4 +54,13 @@ func StrictlyIncreasingInt64(seq []int64) bool {
 		}
 	}
 	return true
+}
+
+// Returns the product of the items in the sequence
+func ProductInt64(seq []int64) int64 {
+	prod := int64(1)
+	for i := 0; i < len(seq); i++ {
+		prod *= seq[i]
+	}
+	return prod
 }

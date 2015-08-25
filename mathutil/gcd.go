@@ -13,6 +13,10 @@ func GCD(r0, r1 int64) int64 {
 	return r0
 }
 
+func LCM(a, b int64) int64 {
+	return (a / GCD(a, b)) * b
+}
+
 func EGCD(r0, r1 int64) (int64, int64, int64) {
 	var negA, negB bool = r0 < 0, r1 < 0
 	var t0, s0, t1, s1 int64 = 0, 1, 1, 0
