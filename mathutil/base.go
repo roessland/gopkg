@@ -47,3 +47,13 @@ func IsPandigital(n int64, length int64) bool {
 	}
 	return true
 }
+
+func IsPalindrome(n int64) bool {
+	digits := ToDigits(n, 10)
+	for i, j := 0, len(digits)-1; i < j; i, j = i+1, j-1 {
+		if digits[i] != digits[j] {
+			return false
+		}
+	}
+	return true
+}

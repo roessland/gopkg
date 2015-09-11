@@ -1,7 +1,9 @@
 package primegen
 
 import "testing"
+import "github.com/stretchr/testify/assert"
 import "github.com/roessland/gopkg/sliceutil"
+import "fmt"
 
 func TestMap_low_nums(t *testing.T) {
 	var m, M []bool
@@ -29,6 +31,18 @@ func TestMap_low_nums(t *testing.T) {
 	if !sliceutil.BoolsEqual(m, M) {
 		t.Errorf("Map(2) = %v, want %v", m, M)
 	}
+}
+
+func TestFactors(t *testing.T) {
+	isPrime, p, k := Factors(100)
+	fmt.Printf("%v\n", p)
+	assert.True(t, isPrime[67])
+	assert.False(t, isPrime[65])
+	assert.Equal(t, []int64(nil), p[2])
+	assert.Equal(t, []int64(nil), k[2])
+	assert.Equal(t, []int64{2}, p[4])
+	assert.Equal(t, []int64{2}, k[4])
+	assert.Equal(t, []int64{3, 11}, p[99])
 }
 
 func TestSlice_low_nums(t *testing.T) {
@@ -59,10 +73,10 @@ func TestSlice_thousand(t *testing.T) {
 }
 
 func TestCount(t *testing.T) {
-    isPrime := Map(100000)
-    if Pi(isPrime, 10) != 4 {
-        t.Errorf("Wrong number of primes below 10")
-    }
+	isPrime := Map(100000)
+	if Pi(isPrime, 10) != 4 {
+		t.Errorf("Wrong number of primes below 10")
+	}
 }
 
 func BenchmarkMap(b *testing.B) {
@@ -72,9 +86,9 @@ func BenchmarkMap(b *testing.B) {
 }
 
 func BenchmarkSlice(b *testing.B) {
-    primesMap := Map(10000)
-    b.ResetTimer()
-    for i := 0; i < b.N; i++ {
-        _ = SliceFromMap(primesMap)
-    }
+	primesMap := Map(10000)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = SliceFromMap(primesMap)
+	}
 }

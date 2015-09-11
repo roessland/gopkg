@@ -32,3 +32,10 @@ func TestIsPandigital(t *testing.T) {
 	assert.Equal(t, false, IsPandigital(123458789, 7), "they should be equal")
 	assert.Equal(t, false, IsPandigital(510152025, 9), "they should be equal")
 }
+
+func TestIsPalindrome(t *testing.T) {
+	assert.True(t, IsPalindrome(1))
+	assert.False(t, IsPalindrome(12))
+	assert.True(t, IsPalindrome(121))
+	assert.True(t, IsPalindrome(12355321))
+}
