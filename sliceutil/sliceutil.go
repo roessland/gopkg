@@ -56,6 +56,15 @@ func StrictlyIncreasingInt64(seq []int64) bool {
 	return true
 }
 
+// Returns the sum of the items in the sequence
+func SumInt64(seq []int64) int64 {
+	sum := int64(0)
+	for i := 0; i < len(seq); i++ {
+		sum += seq[i]
+	}
+	return sum
+}
+
 // Returns the product of the items in the sequence
 func ProductInt64(seq []int64) int64 {
 	prod := int64(1)

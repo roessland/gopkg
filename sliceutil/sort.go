@@ -11,3 +11,7 @@ func (a int64Slice) Less(i, j int) bool { return a[i] < a[j] }
 func SortInt64(slice []int64) {
 	sort.Sort(int64Slice(slice))
 }
+
+func SortInt(slice []int) {
+	sort.Sort(sort.IntSlice(slice))
+}
