@@ -70,7 +70,12 @@ func Factors(N int64) ([]bool, map[int64][]int64, map[int64][]int64) {
 	// Sieve
 	for i := int64(2); i <= N; i++ {
 		if A[i] {
-			for j := i * i; j <= N; j += i {
+			// i is prime, with only one factor -- itself
+			p[i] = append(p[i], i)
+			k[i] = append(k[i], 1)
+
+			// Add i as factor to all multiples of i
+			for j := 2 * i; j <= N; j += i {
 				A[j] = false
 
 				// Find multiplicity
@@ -89,6 +94,7 @@ func Factors(N int64) ([]bool, map[int64][]int64, map[int64][]int64) {
 			}
 		}
 	}
+
 	return A, p, k
 }
 
