@@ -1,4 +1,4 @@
-module github.com/roessland/gopkg/v2
+module github.com/roessland/gopkg
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
