@@ -39,3 +39,18 @@ func TestIsPalindrome(t *testing.T) {
 	assert.True(t, IsPalindrome(121))
 	assert.True(t, IsPalindrome(12355321))
 }
+
+func TestReverse(t *testing.T) {
+	var base int64 = 10
+	cases := [][]int64{
+		{1, 1},
+		{0, 0},
+		{12, 21},
+		{123, 321},
+		{120, 21},
+		{916413, 314619},
+	}
+	for _, c := range cases {
+		assert.Equal(t, c[1], Reverse(c[0], base))
+	}
+}

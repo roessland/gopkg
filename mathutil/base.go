@@ -1,5 +1,7 @@
 package mathutil
 
+import "github.com/roessland/gopkg/sliceutil"
+
 func ToDigits(n, base int64) []int64 {
 	if n < 0 {
 		panic("negative number was provided")
@@ -56,4 +58,10 @@ func IsPalindrome(n int64) bool {
 		}
 	}
 	return true
+}
+
+func Reverse(n int64, base int64) int64 {
+	digits := ToDigits(n, 10)
+	sliceutil.ReverseInt64(digits)
+	return FromDigits(digits, 10)
 }
