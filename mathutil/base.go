@@ -47,6 +47,17 @@ func FromDigits(digits []int64, base int64) int64 {
 	return n
 }
 
+func FromDigitsInt(digits []int, base int) int {
+	var n int
+	for i, b := len(digits)-1, int(1); i >= 0; i, b = i-1, b*base {
+		if digits[i] >= base {
+			panic("digit does not exist in this base")
+		}
+		n += digits[i] * b
+	}
+	return n
+}
+
 func IsPandigital(n int64, length int64) bool {
 	digits := ToDigits(n, 10)
 	if int64(len(digits)) != length {
