@@ -15,6 +15,17 @@ func TestToDigits(t *testing.T) {
 
 }
 
+func TestToDigitsInt(t *testing.T) {
+	assert.Equal(t, []int{1, 2, 3}, ToDigitsInt(123, 10), "they should be equal")
+	assert.Equal(t, []int{1, 1, 1, 2, 0}, ToDigitsInt(123, 3), "they should be equal")
+	assert.Panics(t, func() {
+		ToDigitsInt(-123, 10)
+	}, "negative number should panic")
+	assert.Panics(t, func() {
+		ToDigitsInt(123, 1)
+	}, "base 1 should panic")
+}
+
 func TestFromDigits(t *testing.T) {
 	assert.Equal(t, int64(123), FromDigits([]int64{1, 2, 3}, 10), "they should be equal")
 	assert.Equal(t, int64(123), FromDigits([]int64{1, 1, 1, 2, 0}, 3), "they should be equal")
