@@ -1,19 +1,36 @@
 package mathutil
 
-import "testing"
-import "github.com/stretchr/testify/assert"
+import (
+	"fmt"
+	"testing"
 
-func TestPartition(t *testing.T) {
-	var want, found [][]int64
-	want = [][]int64{[]int64{1, 5}, []int64{2, 4}}
-	found = Partition([]int64{1, 2, 4, 5}, 6, 2, 0)
-	assert.Equal(t, want, found, "")
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+)
 
-	want = [][]int64{[]int64{2, 18}, []int64{7, 13}}
-	found = Partition([]int64{2, 7, 13, 18, 23, 25}, 20, 2, 0)
-	assert.Equal(t, want, found, "")
+func TestPartitionsInt(t *testing.T) {
+	expectPartitionsMs := []MultisetIntInt{
+		{4: 1},
+		{3: 1, 1: 1},
+		{2: 2},
+		{2: 1, 1: 2},
+		{1: 4},
+	}
+	actualPartitions := PartitionsInt(4)
+	fmt.Println(actualPartitions)
+	require.NotNil(t, actualPartitions)
+	actualPartitionsMs := PartitionsIntToMultisetsIntInt(actualPartitions)
+	for _, partition := range actualPartitionsMs {
+		fmt.Println(partition)
+	}
+	require.Equal(t, len(expectPartitionsMs), len(actualPartitionsMs))
+	for i, _ := range expectPartitionsMs {
+		require.NotNil(t, actualPartitions[i])
+		assert.True(t, actualPartitionsMs[i].Equal(expectPartitionsMs[i]))
+	}
 
-	want = [][]int64{[]int64{3, 7, 109, 673}, []int64{5, 7, 107, 673}}
-	found = Partition([]int64{2, 3, 5, 7, 11, 13, 17, 23, 29, 31, 37, 107, 109, 673}, 792, 4, 0)
-	assert.Equal(t, want, found, "")
+	assert.Equal(t, 11, len(PartitionsInt(6)))
+	assert.Equal(t, 15, len(PartitionsInt(7)))
+	assert.Equal(t, 22, len(PartitionsInt(8)))
+	assert.Equal(t, 30, len(PartitionsInt(9)))
 }
