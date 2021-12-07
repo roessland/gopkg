@@ -32,6 +32,22 @@ func MaxInt(a, b int) int {
 	}
 }
 
+func MinInt64(a, b int64) int64 {
+	if a < b {
+		return a
+	} else {
+		return b
+	}
+}
+
+func MinInt(a, b int) int {
+	if a < b {
+		return a
+	} else {
+		return b
+	}
+}
+
 func SignInt64(n int64) int64 {
 	if n == 0 {
 		return 0
