@@ -1,6 +1,8 @@
 package digraph
 
-import "math"
+import (
+	"math"
+)
 import "container/heap"
 
 type Graph struct {
@@ -52,20 +54,6 @@ func (pq *PriorityQueue) Pop() interface{} {
 	return item
 }
 
-// Finds the item with a certain value and changes its priority.
-// Assumes unique values among all heap members.
-func (pq *PriorityQueue) FindUpdate(value int, priority float64) {
-	var i int
-	for i = 0; i < len(*pq); i++ {
-		if (*pq)[i].value == value {
-			(*pq)[i].priority = priority
-			heap.Fix(pq, (*pq)[i].index)
-			return
-		}
-	}
-	panic("Couldn't find and update node -- no node with that value")
-}
-
 func Dijkstra(graph Graph, source int) ([]float64, []int) {
 	numNodes := len(graph.Nodes)
 	//numEdges := len(graph.Edges)
@@ -102,7 +90,12 @@ func Dijkstra(graph Graph, source int) ([]float64, []int) {
 			if alt < dist[v] {
 				dist[v] = alt
 				prev[v] = u
-				Q.FindUpdate(v, alt)
+				// v could already be on the heap!
+				// But that's OK.
+				heap.Push(&Q, &Item{
+					value:    v,
+					priority: dist[v],
+				})
 			}
 		}
 	}
