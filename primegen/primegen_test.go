@@ -1,7 +1,6 @@
 package primegen
 
 import "testing"
-import "github.com/stretchr/testify/assert"
 import "github.com/roessland/gopkg/sliceutil"
 
 func TestMap_low_nums(t *testing.T) {
@@ -30,18 +29,6 @@ func TestMap_low_nums(t *testing.T) {
 	if !sliceutil.BoolsEqual(m, M) {
 		t.Errorf("Map(2) = %v, want %v", m, M)
 	}
-}
-
-func TestFactors(t *testing.T) {
-	isPrime, p, k := Factors(100)
-	assert.True(t, isPrime[67])
-	assert.False(t, isPrime[65])
-	assert.Equal(t, []int64{2}, p[2])
-	assert.Equal(t, []int64{1}, k[2])
-	assert.Equal(t, []int64{2}, p[4])
-	assert.Equal(t, []int64{2}, k[4])
-	assert.Equal(t, []int64{3, 11}, p[99])
-	assert.Equal(t, []int64{2, 1}, k[99])
 }
 
 func TestSlice_low_nums(t *testing.T) {

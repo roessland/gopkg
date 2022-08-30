@@ -42,8 +42,8 @@ func Map(N int64) []bool {
 
 }
 
-// Generates prime factorization for numbers <= N
-func Factors(N int64) ([]bool, map[int64][]int64, map[int64][]int64) {
+// FactorsMap generates prime factorization for numbers <= N
+func FactorsMap(N int64) ([]bool, map[int64][]int64, map[int64][]int64) {
 	if N < 0 {
 		panic("makes no sense")
 	}
@@ -96,6 +96,65 @@ func Factors(N int64) ([]bool, map[int64][]int64, map[int64][]int64) {
 	}
 
 	return A, p, k
+}
+
+type PrimeFactor struct {
+	P int64
+	A int
+}
+
+// FactorsSlice generates prime factorizations for numbers <= N,
+// multiplicity included.
+func FactorsSlice(N int64) ([]bool, [][]PrimeFactor) {
+	if N < 0 {
+		panic("makes no sense")
+	}
+
+	// Map starts out true
+	isPrime := make([]bool, N+1)
+	for i := range isPrime {
+		isPrime[i] = true
+	}
+
+	// Prime factors and multiplicity
+	pfs := make([][]PrimeFactor, N+1)
+
+	// The first two values aren't handled by the sieve, so we manually
+	// specify that they aren't prime.
+	if N >= 0 {
+		isPrime[0] = false
+	}
+	if N >= 1 {
+		isPrime[1] = false
+	}
+
+	// Sieve
+	for i := int64(2); i <= N; i++ {
+		if isPrime[i] {
+			// i is prime, with only one factor -- itself
+			pfs[i] = []PrimeFactor{{P: i, A: 1}}
+
+			// Add i as factor to all multiples of i
+			for j := 2 * i; j <= N; j += i {
+				isPrime[j] = false
+
+				// Find multiplicity
+				multiplicity := 0
+				n := j
+				for {
+					if n%i == 0 {
+						multiplicity++
+					} else {
+						break
+					}
+					n = n / i
+				}
+				pfs[j] = append(pfs[j], PrimeFactor{P: i, A: multiplicity})
+			}
+		}
+	}
+
+	return isPrime, pfs
 }
 
 // The number of prime numbers less than or equal to n

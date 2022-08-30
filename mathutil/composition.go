@@ -1,5 +1,9 @@
 package mathutil
 
+var compositionsCache map[int][][]int = map[int][][]int{
+	0: nil,
+}
+
 // Compositions finds all A-restricted compositions of a positive integer.
 // https://en.wikipedia.org/wiki/Composition_(combinatorics)
 //
@@ -31,7 +35,12 @@ package mathutil
 //   1 + 1 + 1 + 1 + 1.
 //
 func Compositions(n int) [][]int {
-	return compositions(nil, []int{}, n)
+	cached, ok := compositionsCache[n]
+	if ok {
+		return cached
+	}
+	compositionsCache[n] = compositions(nil, []int{}, n)
+	return compositionsCache[n]
 }
 
 // [] (k=2)

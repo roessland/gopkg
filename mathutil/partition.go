@@ -9,7 +9,6 @@ var partitionsCache = map[int][][]int{
 // PartitionsInt finds the integer partitions
 // of a positive integer n.
 // E.g. 4 can be partitioned into:
-
 //     4 =
 //	    4,
 //      3+1,
@@ -50,7 +49,7 @@ func PartitionIntToMultisetIntInt(partition []int) MultisetIntInt {
 	return ms
 }
 
-// // PartitionsIntToMultisetsIntInt converts a list of
+// PartitionsIntToMultisetsIntInt converts a list of
 // partition results into a list of multisets
 func PartitionsIntToMultisetsIntInt(partitions [][]int) []MultisetIntInt {
 	multisets := []MultisetIntInt{}
@@ -78,4 +77,39 @@ func (ms MultisetIntInt) Equal(other MultisetIntInt) bool {
 
 func (ms MultisetIntInt) String() string {
 	return fmt.Sprintf("%v", map[int]int(ms))
+}
+
+// NumPartitionsInt finds the number of integer partitions
+// of a positive integer n.
+// E.g. 4 can be partitioned in 5 different ways:
+//     4 =
+//	    4,
+//      3+1,
+//      2+2,
+//      2+1+1,
+//      1+1+1+1.
+// So NumPartitionsInt(4) is 5.
+func NumPartitionsInt(n int) [][]int {
+	var recurse func(int) [][]int
+	recurse = func(n int) [][]int {
+		cached, ok := partitionsCache[n]
+		if ok {
+			return cached
+		}
+		res := [][]int{{n}}
+
+		for i := 1; i < n; i++ {
+			a := n - i
+			rs := recurse(i)
+			for _, r := range rs {
+				if r[0] <= a {
+					res = append(res, append([]int{a}, r...))
+				}
+			}
+		}
+		partitionsCache[n] = res
+		return res
+	}
+	recurse(n)
+	return partitionsCache[n]
 }
