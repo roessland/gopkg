@@ -42,6 +42,41 @@ func Map(N int64) []bool {
 
 }
 
+// PrimeMap returns an isPrime boolean map containing the numbers up to and
+// including N. PrimeMap uses the sieve of Eratosthenes and has a running time
+// of O(N).
+func MapInt(N int) []bool {
+	if N < 0 {
+		return []bool{}
+	}
+
+	// Map starts out true
+	A := make([]bool, N+1)
+	for i := range A {
+		A[i] = true
+	}
+
+	// The first two values aren't handled by the sieve, so we manually
+	// specify that they aren't prime.
+	if N >= 0 {
+		A[0] = false
+	}
+	if N >= 1 {
+		A[1] = false
+	}
+
+	// Sieve
+	for i := int(2); i <= int(math.Sqrt(float64(N))); i++ {
+		if A[i] {
+			for j := i * i; j <= N; j += i {
+				A[j] = false
+			}
+		}
+	}
+	return A
+
+}
+
 // FactorsMap generates prime factorization for numbers <= N
 func FactorsMap(N int64) ([]bool, map[int64][]int64, map[int64][]int64) {
 	if N < 0 {
@@ -182,6 +217,16 @@ func SliceFromMap(isPrime []bool) []int64 {
 	for num, numIsPrime := range isPrime {
 		if numIsPrime {
 			primes = append(primes, int64(num))
+		}
+	}
+	return primes
+}
+
+func SliceFromMapInt(isPrime []bool) []int {
+	primes := make([]int, 0)
+	for num, numIsPrime := range isPrime {
+		if numIsPrime {
+			primes = append(primes, int(num))
 		}
 	}
 	return primes
