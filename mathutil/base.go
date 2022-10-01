@@ -19,7 +19,7 @@ func ToDigits(n, base int64) []int64 {
 	return digits
 }
 
-func ToDigitsInt(n, base int) []int {
+func ToDigitsInt[A int | int64, B int | int64](n A, base B) []int {
 	if n < 0 {
 		panic("negative number was provided")
 	}
@@ -30,8 +30,8 @@ func ToDigitsInt(n, base int) []int {
 	digits := []int{}
 
 	for n > 0 {
-		digits = append([]int{n % base}, digits...)
-		n = n / base
+		digits = append([]int{int(n % A(base))}, digits...)
+		n = n / A(base)
 	}
 	return digits
 }
