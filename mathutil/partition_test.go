@@ -1,7 +1,6 @@
 package mathutil
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -17,14 +16,14 @@ func TestPartitionsInt(t *testing.T) {
 		{1: 4},
 	}
 	actualPartitions := PartitionsInt(4)
-	fmt.Println(actualPartitions)
+	// fmt.Println(actualPartitions)
 	require.NotNil(t, actualPartitions)
 	actualPartitionsMs := PartitionsIntToMultisetsIntInt(actualPartitions)
-	for _, partition := range actualPartitionsMs {
-		fmt.Println(partition)
-	}
+	// for _, partition := range actualPartitionsMs {
+	// fmt.Println(partition)
+	// }
 	require.Equal(t, len(expectPartitionsMs), len(actualPartitionsMs))
-	for i, _ := range expectPartitionsMs {
+	for i := range expectPartitionsMs {
 		require.NotNil(t, actualPartitions[i])
 		assert.True(t, actualPartitionsMs[i].Equal(expectPartitionsMs[i]))
 	}
@@ -44,14 +43,14 @@ func TestNumPartitionsInt(t *testing.T) {
 		{1: 4},
 	}
 	actualPartitions := PartitionsInt(4)
-	fmt.Println(actualPartitions)
+	// fmt.Println(actualPartitions)
 	require.NotNil(t, actualPartitions)
 	actualPartitionsMs := PartitionsIntToMultisetsIntInt(actualPartitions)
-	for _, partition := range actualPartitionsMs {
-		fmt.Println(partition)
-	}
+	// for _, partition := range actualPartitionsMs {
+	// 	fmt.Println(partition)
+	// }
 	require.Equal(t, len(expectPartitionsMs), len(actualPartitionsMs))
-	for i, _ := range expectPartitionsMs {
+	for i := range expectPartitionsMs {
 		require.NotNil(t, actualPartitions[i])
 		assert.True(t, actualPartitionsMs[i].Equal(expectPartitionsMs[i]))
 	}

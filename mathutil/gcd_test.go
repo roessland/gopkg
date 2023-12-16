@@ -1,7 +1,10 @@
 package mathutil
 
-import "testing"
-import "github.com/stretchr/testify/assert"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestGCD(t *testing.T) {
 	assert.Equal(t, int64(3), GCD(453242343, 442143147), "straight case")
@@ -55,4 +58,5 @@ func TestModularInverse(t *testing.T) {
 	assert.Equal(t, int64(8), ModularInverse(7, 11), "prime modulo")
 	assert.Panics(t, func() { ModularInverse(8, 12) }, "does not exist")
 	assert.Equal(t, int64(5), ModularInverse(5, 12), "composite modulo")
+	assert.Panics(t, func() { ModularInverse(0, 37) }, "0 has no inverse")
 }

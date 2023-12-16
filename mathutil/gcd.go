@@ -1,5 +1,7 @@
 package mathutil
 
+import "fmt"
+
 func GCD(r0, r1 int64) int64 {
 	r0, r1 = AbsInt64(r0), AbsInt64(r1)
 	if r1 > r0 {
@@ -17,6 +19,8 @@ func LCM(a, b int64) int64 {
 	return (a / GCD(a, b)) * b
 }
 
+// EGCD returns the greatest common divisor of a and b, and the Bezout
+// coefficients x and y such that: ax + by = gcd(a, b).
 func EGCD(r0, r1 int64) (int64, int64, int64) {
 	var negA, negB bool = r0 < 0, r1 < 0
 	var t0, s0, t1, s1 int64 = 0, 1, 1, 0
@@ -45,5 +49,10 @@ func ModularInverse(x, n int64) int64 {
 			return s
 		}
 	}
-	panic("Modular inverse does not exist")
+	msg := fmt.Sprintf("Modular inverse of %d mod %d does not exist", x, n)
+	panic(msg)
+}
+
+func IsCoprime(a, b int64) bool {
+	return GCD(a, b) == 1
 }

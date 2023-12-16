@@ -73,3 +73,13 @@ func ProductInt64(seq []int64) int64 {
 	}
 	return prod
 }
+
+func MaxInt64(seq []int64) int64 {
+	max := seq[0]
+	for _, v := range seq {
+		if v > max {
+			max = v
+		}
+	}
+	return max
+}

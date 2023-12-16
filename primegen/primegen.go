@@ -39,7 +39,6 @@ func Map(N int64) []bool {
 		}
 	}
 	return A
-
 }
 
 // PrimeMap returns an isPrime boolean map containing the numbers up to and
@@ -74,10 +73,10 @@ func MapInt(N int) []bool {
 		}
 	}
 	return A
-
 }
 
 // FactorsMap generates prime factorization for numbers <= N
+// Returns isPrime, prime factors, multiplicy
 func FactorsMap(N int64) ([]bool, map[int64][]int64, map[int64][]int64) {
 	if N < 0 {
 		panic("makes no sense")
