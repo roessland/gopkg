@@ -1,3 +1,6 @@
+// Package priorityqueue provides a priority queue data structure.
+// Generic only in its item type. Priority must be float64.
+// The lowest priority is popped first.
 package priorityqueue
 
 import "container/heap"
@@ -6,6 +9,7 @@ type PriorityQueue[T any] struct {
 	queue *queue[T]
 }
 
+// Deprecated: Use priorityqueue2 instead.
 func New[T any]() PriorityQueue[T] {
 	s := make(queue[T], 0)
 	return PriorityQueue[T]{
@@ -13,8 +17,8 @@ func New[T any]() PriorityQueue[T] {
 	}
 }
 
-func (pq *PriorityQueue[T]) Push(item T, priority float64) {
-	it := newItem(item, priority)
+func (pq *PriorityQueue[T]) Push(item T, pri float64) {
+	it := newItem(item, pri)
 	heap.Push(pq.queue, it)
 }
 
