@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"math/big"
+	"strings"
 )
 
 var (
@@ -46,6 +47,62 @@ func FillVec(n int, r *big.Rat) *Vec {
 	return u
 }
 
+// NewMatFromString returns a new matrix from a string representation.
+func NewMatFromString(s string) (*Mat, error) {
+	s = strings.Trim(s, "\n\r\t ")
+	numStrs := [][]string{}
+	for _, line := range strings.Split(s, "\n") {
+		line = strings.TrimSpace(line)
+		line = strings.ReplaceAll(line, "//", "/")
+		if line == "" {
+			continue
+		}
+		lineStrs := strings.Fields(line)
+		numStrs = append(numStrs, lineStrs)
+	}
+	rows := len(numStrs)
+	cols := len(numStrs[0])
+
+	A := Zeros(rows, cols)
+	for i := 0; i < rows; i++ {
+		for j := 0; j < cols; j++ {
+			aij, ok := new(big.Rat).SetString(numStrs[i][j])
+			if !ok {
+				return nil, fmt.Errorf("could not parse %v", numStrs[i][j])
+			}
+			A.Set(i, j, aij)
+		}
+	}
+	return A, nil
+}
+
+func NewVecFromString(s string) (*Vec, error) {
+	m, err := NewMatFromString(s)
+	if err != nil {
+		return nil, err
+	}
+	return m.AsVec(), nil
+}
+
+func MustNewMatFromString(s string) *Mat {
+	A, err := NewMatFromString(s)
+	if err != nil {
+		panic(err)
+	}
+	return A
+}
+
+func MustNewVecFromString(s string) *Vec {
+	v, err := NewVecFromString(s)
+	if err != nil {
+		panic(err)
+	}
+	if v == nil {
+		panic("v is nil")
+	}
+	return v
+}
+
 // Rows returns the number of rows in the matrix.
 func (A *Mat) Rows() int {
 	return A.rows
@@ -73,6 +130,9 @@ func (v *Vec) At(i int) *big.Rat {
 
 // AsVec returns a view of the matrix as a vector.
 func (A *Mat) AsVec() *Vec {
+	if A == nil {
+		panic("A is nil")
+	}
 	return &Vec{data: A.data, rows: A.rows * A.cols, cols: 1}
 }
 
@@ -474,16 +534,25 @@ func (u *Vec) Pivot(p []int) *Vec {
 	return v
 }
 
+// Forwardsub solves a lower-triangular system Lx = b
+// using forward substitution.
+//
 // See https://tobydriscoll.net/fnc-julia/linsys/linear-systems.html
 func (L *Mat) Forwardsub(b *Vec) *Vec {
 	n := L.rows
+	// x = zeros(n)
 	x := ZerosVec(n)
+	// x[1] = b[1] / L[1,1]
 	x.Set(0, new(big.Rat).Quo(b.At(0), L.At(0, 0)))
+	// for i in 2:n
 	for i := 1; i < n; i++ {
+		// s = sum(L[i,j] * x[j] for j in 1:i-1)
 		s := new(big.Rat)
-		for j := 0; j < i-1; j++ {
+		for j := 0; j < i; j++ {
+			// s += L[i,j] * x[j]
 			s.Add(s, new(big.Rat).Mul(L.At(i, j), x.At(j)))
 		}
+		// x[i] = (b[i] - s) / L[i,i]
 		x.Set(i, new(big.Rat).Quo(new(big.Rat).Sub(b.At(i), s), L.At(i, i)))
 	}
 	return x
@@ -492,8 +561,10 @@ func (L *Mat) Forwardsub(b *Vec) *Vec {
 func (U *Mat) Backsub(b *Vec) *Vec {
 	n := U.rows
 	x := ZerosVec(n)
-	// x[n-1] = b[n-1] / U[n-1,n-1]
+	// x[n] = b[n] / U[n,n]
 	x.Set(n-1, new(big.Rat).Quo(b.At(n-1), U.At(n-1, n-1)))
+
+	// for i in n-1:-1:1
 	for i := n - 2; i >= 0; i-- {
 		// s = sum(U[i,j] * x[j] for j in i+1:n)
 		s := new(big.Rat)
@@ -509,7 +580,15 @@ func (U *Mat) Backsub(b *Vec) *Vec {
 func (A *Mat) Backslash(b *Vec) *Vec {
 	L, U, p := A.PLUFact()
 	z := L.Forwardsub(b.Pivot(p))
-	fmt.Println("z", z)
 	x := U.Backsub(z)
 	return x
+}
+
+func (u *Vec) Equal(v *Vec) bool {
+	for i := 0; i < u.rows; i++ {
+		if u.At(i).Cmp(v.At(i)) != 0 {
+			return false
+		}
+	}
+	return true
 }

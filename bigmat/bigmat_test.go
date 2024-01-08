@@ -276,3 +276,129 @@ func TestBigMat_PLUFact_Requires_Pivoting(t *testing.T) {
 	normF, _ := norm.Float64()
 	require.EqualValues(t, 0, normF)
 }
+
+func TestBigMat_NewMatFromString(t *testing.T) {
+	oneHalf, ok := new(big.Rat).SetString("1/2")
+	require.True(t, ok)
+	require.EqualValues(t, 1, oneHalf.Num().Int64())
+
+	A, err := bigmat.NewMatFromString(`1337//1338`)
+	require.NoError(t, err)
+	require.EqualValues(t, 1337, A.At(0, 0).Num().Int64())
+	require.EqualValues(t, 1338, A.At(0, 0).Denom().Int64())
+
+	u := bigmat.MustNewVecFromString(`
+    1337//1338
+    1/1000
+  `)
+	require.EqualValues(t, 2, u.Len())
+	require.EqualValues(t, 1337, u.At(0).Num().Int64())
+	require.EqualValues(t, 1000, u.At(1).Denom().Int64())
+}
+
+func TestBigMat_PLUFact_AoC2023_24(t *testing.T) {
+	A, err := bigmat.NewMatFromString(`
+    0    517   430  0                200449925047571 119796160238546
+    -517 0    -120 -200449925047571  0               -50016083636040
+    -430 120  0    -119796160238546  50016083636040  0
+    0    264  217   0                5508734318078  -43844419026563
+    -264 0   -189  -5508734318078    0              -103223937923385
+    -217 189 0     43844419026563    103223937923385 0
+  `)
+	require.NoError(t, err)
+
+	L, U, p := A.PLUFact()
+
+	LU := L.MatMul(U)
+	tildeA := A.Pivot(p) // Permute rows
+	res := tildeA.Sub(LU)
+	norm := res.Norm1()
+	require.True(t, norm.Cmp(big.NewRat(0, 1)) == 0)
+}
+
+func TestBigMat_Forwardsub(t *testing.T) {
+	L := bigmat.MustNewMatFromString(`
+    1//1         0//1              0//1                     0//1            0//1
+    33//488       1//1              0//1                     0//1            0//1
+  597//976  -55749//792862         1//1                     0//1            0//1
+  245//976  413467//792862  10083539//80440138              1//1            0//1
+  177//488   34161//56633   43183462//120660207  -34128982256//61666927185  1//1
+  `)
+
+	b := bigmat.MustNewVecFromString(`
+      670//1
+      131//1
+      925//1
+      826//1
+      823//1
+    `)
+
+	xActual := L.Forwardsub(b)
+	xExpected := bigmat.MustNewVecFromString(`
+             670//1
+          20909//244
+       59034187//113266
+    88128801929//160880276
+ 13257035041413//20555642395
+  `)
+
+	require.True(t, xExpected.Equal(xActual))
+}
+
+func TestBigMat_Backsub(t *testing.T) {
+	U := bigmat.MustNewMatFromString(`
+ 976//1     113//1          350//1                895//1                   478//1
+   0//1  396431//488      75721//244           412593//488              226109//244
+   0//1       0//1    241320414//396431    -131220766//396431        535003271//792862
+   0//1       0//1            0//1       -20555642395//40220069   -43892193245//160880276
+   0//1       0//1            0//1                  0//1         -101762259857//141763051
+  `)
+
+	b := bigmat.MustNewVecFromString(`
+      670//1
+      131//1
+      925//1
+      826//1
+      823//1
+    `)
+
+	xActual := U.Backsub(b)
+	xExpected := bigmat.MustNewVecFromString(`
+ 19077382127791630934866447173755692177//16276013367835250878062971351401069480
+   221033844124556618912751507666463623//133409945637993859656253863536074340
+          13022571089199006066794148891//5802198810176639847324557830
+                -8401946731626362742047//8367154491710223350060
+                          -116670990973//101762259857
+  `)
+
+	require.True(t, xExpected.Equal(xActual))
+}
+
+func TestBigMat_Backslash(t *testing.T) {
+	A := bigmat.MustNewMatFromString(`
+     66//1  820//1  334//1  906//1  959//1
+    245//1  452//1  326//1  113//1  415//1
+    976//1  113//1  350//1  895//1  478//1
+    597//1   12//1  801//1  157//1  902//1
+    354//1  531//1  532//1  999//1  407//1
+  `)
+
+	b := bigmat.MustNewVecFromString(`
+      670//1
+      131//1
+      925//1
+      826//1
+      823//1
+    `)
+
+	xActual := A.Backslash(b)
+	xExpected := bigmat.MustNewVecFromString(`
+        974070714041//88533166075590
+     -16912724457027//29511055358530
+      22828392056381//44266583037795
+      12640691387489//17706633215118
+      14779216313252//44266583037795
+  `)
+
+	require.True(t, xExpected.Equal(xActual))
+}
