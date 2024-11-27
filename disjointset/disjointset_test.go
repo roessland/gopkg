@@ -1,8 +1,11 @@
 package disjointset
 
-import "testing"
-import "fmt"
-import "github.com/stretchr/testify/assert"
+import (
+	"fmt"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestMake(t *testing.T) {
 	ds := Make(10)
