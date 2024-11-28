@@ -12,6 +12,14 @@ func TestMake(t *testing.T) {
 	assert.Equal(t, 9, ds.Find(9))
 }
 
+func TestClone(t *testing.T) {
+	ds := Make(10)
+	assert.Equal(t, 9, ds.Find(9))
+
+	dsClone := ds.Clone()
+	assert.Equal(t, 9, dsClone.Find(9))
+}
+
 func TestUnionFind(t *testing.T) {
 	ds := Make(10) // (8 9 1 2) (0 3 5 4) 7 5
 	assert.Equal(t, 10, ds.Count)

@@ -1,10 +1,11 @@
 package karger
 
 import (
-	"sort"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
+	"golang.org/x/exp/rand"
 )
 
 /*
@@ -79,21 +80,18 @@ func TestKarger(t *testing.T) {
 	g.AddEdge(4, 5)
 	g.AddEdge(3, 6)
 
-	result := Karger(g)
-	sort.Slice(result.Edges, func(i, j int) bool {
-		return result.Edges[i].A < result.Edges[j].A
-	})
-	assert.Equal(t, 3, len(result.Edges))
+	rand.Seed(uint64(time.Now().UnixNano()))
 
-	assert.Equal(t, 0, result.Edges[0].A)
-	assert.Equal(t, 9, result.Edges[0].B)
-
-	assert.Equal(t, 3, result.Edges[1].A)
-	assert.Equal(t, 6, result.Edges[1].B)
-
-	assert.Equal(t, 4, result.Edges[2].A)
-	assert.Equal(t, 5, result.Edges[2].B)
-
-	assert.Equal(t, 5, result.SizeA)
-	assert.Equal(t, 5, result.SizeB)
+	// Karger contraction is a probabilistic algorithm
+	numFailures := 0
+	numSuccesses := 0
+	for i := 0; i < 100; i++ {
+		result := Karger(g)
+		if len(result.Edges) == 3 {
+			numSuccesses++
+		} else {
+			numFailures++
+		}
+	}
+	assert.Greater(t, numSuccesses, 10)
 }

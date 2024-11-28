@@ -9,6 +9,9 @@ type DisjointSet struct {
 }
 
 func Make(size int) *DisjointSet {
+	if size == 0 {
+		panic("nah")
+	}
 	var ds DisjointSet
 	ds.Count = size
 	ds.rank = make([]int, size)
@@ -19,6 +22,15 @@ func Make(size int) *DisjointSet {
 	return &ds
 }
 
+func (ds *DisjointSet) Clone() *DisjointSet {
+	return &DisjointSet{
+		rank:   append([]int(nil), ds.rank...),
+		parent: append([]int(nil), ds.parent...),
+		Count:  ds.Count,
+	}
+}
+
+// Find returns the root of the set containing i.
 func (ds *DisjointSet) Find(i int) int {
 	if ds.parent[i] != i {
 		ds.parent[i] = ds.Find(ds.parent[i])

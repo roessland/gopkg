@@ -1,8 +1,10 @@
 package karger
 
 import (
+	"fmt"
+	"math/rand"
+
 	"github.com/roessland/gopkg/disjointset"
-	"golang.org/x/exp/rand"
 )
 
 type Graph struct {
@@ -31,46 +33,59 @@ func (g *Graph) AddVertex() {
 }
 
 func Karger(g *Graph) Result {
-	V := g.NumVertices
+	return contract(g, disjointset.Make(g.NumVertices), 2)
+}
+
+func contract(g *Graph, ds *disjointset.DisjointSet, t int) Result {
+	if t < 2 {
+		panic("t: Number of vertices must be at least 2")
+	}
+	V := ds.Count
+	if V < 2 {
+		panic("Number of vertices must be at least 2")
+	}
 	E := len(g.Edges)
 	edges := g.Edges
-	ds := disjointset.Make(V)
 
-	for V > 2 {
+	edgesContracted := 0
+	for V > t {
+		if edgesContracted >= E {
+			panic("no more edges")
+		}
 		// Pick random edge to contract
 		ie := rand.Intn(E)
 		from, to := edges[ie].A, edges[ie].B
-		componentFrom, componentTo := ds.Find(from), ds.Find(to)
 
 		// No point in contracting if the vertices are already in the same component
-		if componentFrom == componentTo {
+		if ds.Connected(from, to) {
 			continue
 		}
 
 		// Contract
+		edgesContracted++
 		ds.Union(from, to)
 		V--
 	}
 
 	// Find two remaining components
-	var componentA, componentB int
-	componentA = ds.Find(0)
-	for i := 1; i < g.NumVertices; i++ {
-		componentB = ds.Find(i)
-		if componentB != componentA {
+	componentA, componentB := ds.Find(0), ds.Find(0)
+	for i := 0; i < g.NumVertices; i++ {
+		if !ds.Connected(i, componentA) {
+			componentB = ds.Find(i)
 			break
 		}
 	}
+	if componentA == componentB {
+		panic("componentA == componentB")
+	}
 
-	// Find sizes of the two components
+	//	Find sizes of the two components
 	sizeA, sizeB := 0, 0
 	for i := 0; i < g.NumVertices; i++ {
-		if ds.Find(i) == componentA {
+		if ds.Connected(i, componentA) {
 			sizeA++
-		} else if ds.Find(i) == componentB {
-			sizeB++
 		} else {
-			panic("Vertex not in any component")
+			sizeB++
 		}
 	}
 
@@ -84,14 +99,20 @@ func Karger(g *Graph) Result {
 		}
 	}
 
+	if ds.Count <= 1 {
+		panic(fmt.Sprintf("ds.Count <= 1: %d", ds.Count))
+	}
 	return Result{
 		Edges: cutEdges,
 		SizeA: sizeA,
 		SizeB: sizeB,
+		DS:    ds,
 	}
 }
 
 type Result struct {
-	Edges        []Edge
-	SizeA, SizeB int
+	DS    *disjointset.DisjointSet
+	Edges []Edge
+	SizeA int
+	SizeB int
 }
